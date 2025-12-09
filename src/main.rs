@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 // Création de la structure "Livre" avec les champs nécessaires.
 struct Livre {
     titre: String,
@@ -20,36 +20,36 @@ impl Livre {
     }
 }
 
-// Emprunter un livre
-fn emprunter_livre(bibliotheque: &mut Vec<Livre>, titre_recherche: String) {
-    let mut livre_trouve = false;
-    
-    let mut i = 0;
-    loop {
-        if i >= bibliotheque.len() {
-            break;
-        }
-        
-        if bibliotheque[i].titre == titre_recherche {
-            livre_trouve = true;
-            if bibliotheque[i].disponible == true {
-                bibliotheque[i].disponible = false;
-                println!("Livre emprunté !");
+// Emprunter un livre. N'a besoin que du titre du livre et de la bibliothèque où chercher.
+fn emprunter_livre(bibliotheque: &mut Vec<Livre>, titre_recherche: &str) {
+    for livre in bibliotheque.iter_mut() {
+        if livre.titre == titre_recherche {
+            if livre.disponible {
+                livre.disponible = false;
+                println!("{} emprunté !", titre_recherche);
             } else {
-                println!("Ce livre est déjà emprunté !");
+                println!("{} est déjà emprunté !", titre_recherche);
             }
             break;
         }
-        
-        i = i + 1;
-    }
-    
-    if livre_trouve == false {
-        println!("Livre non trouvé !");
     }
 }
 
-
+// Retourner un livre. N'a besoin que du titre du livre et de la bibliothèque où chercher.
+fn retourner_livre(bibliotheque: &mut Vec<Livre>, titre_recherche: &str) {
+    for livre in bibliotheque.iter_mut() {
+        if livre.titre == titre_recherche {
+            if livre.disponible == false {
+                livre.disponible = true;
+                println!("{} retourné !", titre_recherche);
+            } else {
+                println!("{} est déjà disponible !", titre_recherche);
+            }
+            break;
+        }
+        println!("{} non trouvé !", titre_recherche);
+    }
+}
 
 fn main() {
     // On crée un vecteur de Livres
@@ -63,5 +63,12 @@ fn main() {
     ));
 
     // Débug, à retirer ensuite. Changer le nth(x) pour afficher un item différent du vecteur
-    println!("{:?}", bibliotheque.into_iter().nth(0));
+    println!("{:?}", bibliotheque.clone().into_iter().nth(0));
+
+    emprunter_livre(&mut bibliotheque, "Le petit Prince");
+    emprunter_livre(&mut bibliotheque, "Le petit Prince");
+    retourner_livre(&mut bibliotheque, "Le petit Prince");
+    retourner_livre(&mut bibliotheque, "Le petit Prince");
+    retourner_livre(&mut bibliotheque, "Robinson Crusoé");
+    emprunter_livre(&mut bibliotheque, "Robinson Crusoé");
 }
