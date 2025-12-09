@@ -20,6 +20,37 @@ impl Livre {
     }
 }
 
+// Emprunter un livre
+fn emprunter_livre(bibliotheque: &mut Vec<Livre>, titre_recherche: String) {
+    let mut livre_trouve = false;
+    
+    let mut i = 0;
+    loop {
+        if i >= bibliotheque.len() {
+            break;
+        }
+        
+        if bibliotheque[i].titre == titre_recherche {
+            livre_trouve = true;
+            if bibliotheque[i].disponible == true {
+                bibliotheque[i].disponible = false;
+                println!("Livre emprunté !");
+            } else {
+                println!("Ce livre est déjà emprunté !");
+            }
+            break;
+        }
+        
+        i = i + 1;
+    }
+    
+    if livre_trouve == false {
+        println!("Livre non trouvé !");
+    }
+}
+
+
+
 fn main() {
     // On crée un vecteur de Livres
     let mut bibliotheque: Vec<Livre> = Vec::new();
