@@ -51,6 +51,28 @@ fn retourner_livre(bibliotheque: &mut Vec<Livre>, titre_recherche: &str) {
     }
 }
 
+fn afficher_livres(bibliotheque: &mut Vec<Livre>) {
+    println!("\n#######################\n#       Livres:       #\n#######################");
+    for livre in bibliotheque.iter_mut() {
+        println!(
+            " Titre: {} \n Auteur: {}\n Année: {}\n Disponible: {}\n",
+            livre.titre, livre.auteur, livre.annee, livre.disponible
+        )
+    }
+}
+
+fn afficher_livres_disponibles(bibliotheque: &mut Vec<Livre>) {
+    println!("\n#######################\n# Livres Disponibles: #\n#######################");
+    for livre in bibliotheque.iter_mut() {
+        if livre.disponible == true {
+            println!(
+                " Titre: {} \n Auteur: {}\n Année: {}\n ####### \n",
+                livre.titre, livre.auteur, livre.annee
+            )
+        }
+    }
+}
+
 fn main() {
     // On crée un vecteur de Livres
     let mut bibliotheque: Vec<Livre> = Vec::new();
@@ -66,9 +88,11 @@ fn main() {
     println!("{:?}", bibliotheque.clone().into_iter().nth(0));
 
     emprunter_livre(&mut bibliotheque, "Le petit Prince");
-    emprunter_livre(&mut bibliotheque, "Le petit Prince");
     retourner_livre(&mut bibliotheque, "Le petit Prince");
     retourner_livre(&mut bibliotheque, "Le petit Prince");
     retourner_livre(&mut bibliotheque, "Robinson Crusoé");
     emprunter_livre(&mut bibliotheque, "Robinson Crusoé");
+    afficher_livres(&mut bibliotheque);
+    emprunter_livre(&mut bibliotheque, "Le petit Prince");
+    afficher_livres_disponibles(&mut bibliotheque);
 }
