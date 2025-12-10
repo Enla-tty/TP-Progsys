@@ -72,11 +72,10 @@ fn afficher_livres_disponibles(bibliotheque: &mut Vec<Livre>) {
         }
     }
 }
-
 fn main() {
     // On crée un vecteur de Livres
     let mut bibliotheque: Vec<Livre> = Vec::new();
-    
+
     // Boucle principale du menu
     loop {
         println!("\n--- Bibliothèque ---");
@@ -86,63 +85,81 @@ fn main() {
         println!("4. Afficher tous les livres");
         println!("5. Afficher les livres disponibles");
         println!("6. Quitter");
-        
+
         let mut choix = String::new();
         println!("Votre choix:");
         std::io::stdin().read_line(&mut choix).unwrap();
         let choix: i32 = choix.trim().parse().unwrap_or(0);
-        
-        if choix == 1 {
-            // Ajouter un livre
-            let mut titre = String::new();
-            println!("Titre:");
-            std::io::stdin().read_line(&mut titre).unwrap();
-            let titre = titre.trim().to_string();
-            
-            let mut auteur = String::new();
-            println!("Auteur:");
-            std::io::stdin().read_line(&mut auteur).unwrap();
-            let auteur = auteur.trim().to_string();
-            
-            let mut annee_str = String::new();
-            println!("Année:");
-            std::io::stdin().read_line(&mut annee_str).unwrap();
-            let annee: i16 = annee_str.trim().parse().unwrap_or(0);
-            
-            bibliotheque.push(Livre::new(titre, auteur, annee));
-            println!("Livre ajouté avec succès !");
-        }
-        
-        if choix == 2 {
-            // Emprunter un livre
-            let mut titre = String::new();
-            println!("Titre:");
-            std::io::stdin().read_line(&mut titre).unwrap();
-            emprunter_livre(&mut bibliotheque, titre.trim());
-        }
-        
-        if choix == 3 {
-            // Retourner un livre
-            let mut titre = String::new();
-            println!("Titre:");
-            std::io::stdin().read_line(&mut titre).unwrap();
-            retourner_livre(&mut bibliotheque, titre.trim());
-        }
-        
-        if choix == 4 {
-            // Afficher tous les livres
-            afficher_livres(&mut bibliotheque);
-        }
-        
-        if choix == 5 {
-            // Afficher les livres disponibles
-            afficher_livres_disponibles(&mut bibliotheque);
-        }
-        
-        if choix == 6 {
-            // Quitter
-            println!("Au revoir !");
-            break;
+
+        match choix {
+            1 => {
+                let titre = loop {
+                    let mut input = String::new();
+                    println!("Titre:");
+                    std::io::stdin().read_line(&mut input).unwrap();
+                    let trimmed = input.trim();
+                    if !trimmed.is_empty() {
+                        break trimmed.to_string();
+                    }
+                    println!("Le titre ne peut pas être vide.");
+                };
+
+                let auteur = loop {
+                    let mut input = String::new();
+                    println!("Auteur:");
+                    std::io::stdin().read_line(&mut input).unwrap();
+                    let trimmed = input.trim();
+                    if !trimmed.is_empty() {
+                        break trimmed.to_string();
+                    }
+                    println!("L'auteur ne peut pas être vide.");
+                };
+
+                let annee = loop {
+                    let mut input = String::new();
+                    println!("Année:");
+                    std::io::stdin().read_line(&mut input).unwrap();
+
+                    match input.trim().parse::<i16>() {
+                        Ok(year) if (0..=2025).contains(&year) => break year,
+                        Ok(_) => println!("Année invalide (0-2025)."),
+                        Err(_) => println!("Veuillez entrer un nombre."),
+                    }
+                };
+
+                bibliotheque.push(Livre::new(titre, auteur, annee));
+                println!("Livre ajouté avec succès !");
+            }
+            2 => {
+                // Emprunter un livre
+                let mut titre = String::new();
+                println!("Titre:");
+                std::io::stdin().read_line(&mut titre).unwrap();
+                emprunter_livre(&mut bibliotheque, titre.trim());
+            }
+            3 => {
+                // Retourner un livre
+                let mut titre = String::new();
+                println!("Titre:");
+                std::io::stdin().read_line(&mut titre).unwrap();
+                retourner_livre(&mut bibliotheque, titre.trim());
+            }
+            4 => {
+                // Afficher tous les livres
+                afficher_livres(&mut bibliotheque);
+            }
+            5 => {
+                // Afficher les livres disponibles
+                afficher_livres_disponibles(&mut bibliotheque);
+            }
+            6 => {
+                // Quitter
+                println!("Au revoir !");
+                break;
+            }
+            _ => {
+                println!("Choix invalide, veuillez réessayer.");
+            }
         }
     }
 }
