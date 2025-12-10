@@ -76,23 +76,73 @@ fn afficher_livres_disponibles(bibliotheque: &mut Vec<Livre>) {
 fn main() {
     // On crée un vecteur de Livres
     let mut bibliotheque: Vec<Livre> = Vec::new();
-
-    // Et on y push le résultat de la fonction "new", qui return directement un Livre.
-    bibliotheque.push(Livre::new(
-        "Le petit Prince",
-        "Antoine de Saint-Exupéry",
-        1943,
-    ));
-
-    // Débug, à retirer ensuite. Changer le nth(x) pour afficher un item différent du vecteur
-    println!("{:?}", bibliotheque.clone().into_iter().nth(0));
-
-    emprunter_livre(&mut bibliotheque, "Le petit Prince");
-    retourner_livre(&mut bibliotheque, "Le petit Prince");
-    retourner_livre(&mut bibliotheque, "Le petit Prince");
-    retourner_livre(&mut bibliotheque, "Robinson Crusoé");
-    emprunter_livre(&mut bibliotheque, "Robinson Crusoé");
-    afficher_livres(&mut bibliotheque);
-    emprunter_livre(&mut bibliotheque, "Le petit Prince");
-    afficher_livres_disponibles(&mut bibliotheque);
+    
+    // Boucle principale du menu
+    loop {
+        println!("\n--- Bibliothèque ---");
+        println!("1. Ajouter un livre");
+        println!("2. Emprunter un livre");
+        println!("3. Retourner un livre");
+        println!("4. Afficher tous les livres");
+        println!("5. Afficher les livres disponibles");
+        println!("6. Quitter");
+        
+        let mut choix = String::new();
+        println!("Votre choix:");
+        std::io::stdin().read_line(&mut choix).unwrap();
+        let choix: i32 = choix.trim().parse().unwrap_or(0);
+        
+        if choix == 1 {
+            // Ajouter un livre
+            let mut titre = String::new();
+            println!("Titre:");
+            std::io::stdin().read_line(&mut titre).unwrap();
+            let titre = titre.trim().to_string();
+            
+            let mut auteur = String::new();
+            println!("Auteur:");
+            std::io::stdin().read_line(&mut auteur).unwrap();
+            let auteur = auteur.trim().to_string();
+            
+            let mut annee_str = String::new();
+            println!("Année:");
+            std::io::stdin().read_line(&mut annee_str).unwrap();
+            let annee: i16 = annee_str.trim().parse().unwrap_or(0);
+            
+            bibliotheque.push(Livre::new(titre, auteur, annee));
+            println!("Livre ajouté avec succès !");
+        }
+        
+        if choix == 2 {
+            // Emprunter un livre
+            let mut titre = String::new();
+            println!("Titre:");
+            std::io::stdin().read_line(&mut titre).unwrap();
+            emprunter_livre(&mut bibliotheque, titre.trim());
+        }
+        
+        if choix == 3 {
+            // Retourner un livre
+            let mut titre = String::new();
+            println!("Titre:");
+            std::io::stdin().read_line(&mut titre).unwrap();
+            retourner_livre(&mut bibliotheque, titre.trim());
+        }
+        
+        if choix == 4 {
+            // Afficher tous les livres
+            afficher_livres(&mut bibliotheque);
+        }
+        
+        if choix == 5 {
+            // Afficher les livres disponibles
+            afficher_livres_disponibles(&mut bibliotheque);
+        }
+        
+        if choix == 6 {
+            // Quitter
+            println!("Au revoir !");
+            break;
+        }
+    }
 }
